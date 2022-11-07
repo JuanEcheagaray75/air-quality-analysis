@@ -10,3 +10,5 @@
 *.out
 *.synctex.gz
 *.toc
+*.pyc
+.streamlit
