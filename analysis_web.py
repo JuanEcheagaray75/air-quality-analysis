@@ -1,67 +1,36 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+from utils import clean_data, metric_calculator, melt_data, create_time_series
+from utils import locations, cont_params, cont_units, meteo_params, meteo_units
+import requests
+from streamlit_lottie import st_lottie
+from PIL import Image
 
 
+# DATA ASSETS
+# ------------------------------------------------------------------
 df_cont = pd.read_csv('data/SD_TecMTY_contaminantes_2021_2022.csv')
 df_meteo = pd.read_csv('data/SD_TecMTY_meteorologia_2021_2022.csv')
 
-locations = {
-            "Guadalupe, La Pastora" : "SE",
-            "San Nicolás de los Garzas, San Nicolás" : "NE",
-            "Monterrey, Obispado" : "CE",
-            "Monterrey, San Bernabé": "NO",
-            "Santa Catarina, Santa Catarina": "SO",
-            "García, García" : "NO2",
-            "Escobedo, Escobedo": "NTE",
-            "Apodaca, Apodaca" : "NE2",
-            "Juárez, Juárez" : "SE2",
-            "San Pedro Garza García, San Pedro": "SO2"
-            }
-pollutants = ["PM10", "PM2.5", "O3", "NO2", "SO2", "CO"]
+df_cont.drop(columns=['Unnamed: 0'], inplace=True)
+df_meteo.drop(columns=['Unnamed: 0'], inplace=True)
 
-meteo_parameters = {
-    "Temperatura": "TOUT",
-    "Humedad relativa": "RH",
-    "Radiación Solar": "SR",
-    "Precipitación": "RAINF",
-    "Presión Atmosférica": "PRES",
-    "Velocidad del viento": "WSR",
-    "Dirección del viento": "WDR"
-}
+big_cont = melt_data(df_cont)
+big_meteo = melt_data(df_meteo)
+# ------------------------------------------------------------------
 
-meteo_params = ['TOUT', 'RH', 'SR', 'RAINF', 'PRS', 'WSR', 'WDR']
-cont_params = ['PM10', 'PM2.5', 'O3', 'NO2', 'SO2', 'CO']
+# IMAGE ASSETS
+# ------------------------------------------------------------------
+def load_lottieurl(url):
+    """Load a Lottie animation from a URL."""
+    r = requests.get(url)
 
-def clean_data(station: str, dataframe: pd.DataFrame, type: str) -> pd.DataFrame:
+    if r.status_code != 200:
+        return None
 
-    # Get value of key
-    # Try and catch in case the station is not in the dictionary
-    try:
-        location = locations[station]
-    except:
-        raise ValueError('Station not found')
-
-    # Columns
-    dataframe.parameter = dataframe.parameter.str.strip()
-    dataframe = pd.pivot(dataframe, index='date', columns=['parameter'], values=[location, f'{location}_b'])
-    dataframe.columns = [f'{location}-' + col[1] if col[0] == location else f'{location}_b-' + col[1] for col in dataframe.columns]
-    dataframe.reset_index(inplace=True)
-    dataframe.date = pd.to_datetime(dataframe.date)
-
-    if type == 'meteo':
-        for param in meteo_params:
-            dataframe[f'{location}-{param}'] = dataframe[f'{location}-{param}'].astype(float)
-
-    elif type == 'cont':
-
-        for param in cont_params:
-            dataframe[f'{location}-{param}'] = pd.to_numeric(dataframe[f'{location}-{param}'], errors='coerce')
-
-    else:
-        raise ValueError('Type must be meteo or cont')
-
-    return dataframe
+    return r.json()
+home_anim = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_EyJRUV.json")
 
 
 
@@ -70,38 +39,129 @@ def main():
     st.title("Análisis de calidad el aire en ZMM de Monterrey")
     st.write("Sistema Integral de Monitoreo de la Calidad del Aire | Tec de Monterrey")
 
-    st.sidebar.header("User Input Parameters")
+    # st.sidebar.header("User Input Parameters")
 
-    tabs = ["Home", "Time Series", "About"]
+    tabs = ["Home", "Análisis temporal", "Acerca de"]
     tabs = st.tabs(tabs)
 
     with tabs[0]:
         st.header("Home")
 
-    with tabs[1]:
-        st.header("Time Series")
-        st.write("Select the location and the pollutant to see the time series")
-        location = st.selectbox("Location", list(locations.keys()))
-        pollutant = st.selectbox("Pollutant", pollutants)
+        with st.container():
+            st.write('---')
+            st.header('Calidad del Aire')
+            col1, col2 = st.columns([1.5,2])
+            with col1:
+                st.write(
+                    '''
+                    Las actividades diarias de los ciudadanos generan una gran cantidad de contaminantes que modifican la composición natural
+                    del aire que respiramos. Estos contaminantes pueden ser nocivos para la salud humana y el medio ambiente y vienen de diversas
+                    fuentes, como:
+                    - Tráfico
+                    - Industria
+                    - Agricultura
+                    - Quema de combustibles fósiles.
+                    '''
+                )
+            with col2:
+                st_lottie(home_anim, height=300)
 
-        dfc = clean_data(location, df_cont, 'cont')
+            num_input = st.number_input(
+                label="Number of days to calculate metrics",
+                min_value=1,
+                max_value=365,
+                value=7,
+                step=1,
+                format="%i",
+            )
+            mean_scores = metric_calculator(big_cont, num_input, 'contaminant')
+
+            cols = st.columns(len(cont_params))
+
+            for idx, param in enumerate(cont_params):
+                mean = mean_scores.loc[param]['mean']
+                diff = mean_scores.loc[param]['diff']
+                cols[idx].metric(label=f'{param} [{cont_units[param]}]',
+                                value=f'{mean:.2f}',
+                                delta=f'{diff:.2f}',
+                                delta_color="inverse")
+
+    # Análisis temporal
+    with tabs[1]:
+        st.header("Series de tiempo")
+        st.write("Selecciona la estación y el parámetro que deseas visualizar")
+        # db_conv = {'Contaminantes': 'cont', 'Meteorología': 'meteo'}
+        param_conv = {'Contaminantes': cont_params, 'Meteorológicos': meteo_params}
+
+        cols = st.columns(2)
+        with cols[0]:
+            db_type = st.radio("Select the type of data", ('Contaminantes', 'Meteorológicos'))
+            time_window = st.selectbox("Time window", ('D', 'W', 'M', 'Y'))
+            # Map db_type to either 'cont' or 'meteo'
+
+        with cols[1]:
+            location = st.selectbox("Location", list(locations.keys()))
+            params = param_conv[db_type]
+            parameter = st.selectbox("Parameter", params)
+
+        if db_type == 'Contaminantes':
+            df = clean_data(big_cont, location)
+            type = 'cont'
+        elif db_type == 'Meteorológicos':
+            df = clean_data(big_meteo, location)
+            type = 'meteo'
 
         st.write("Time series of pollutant concentration")
-        alt.data_transformers.disable_max_rows()
-        scales = alt.selection_interval(bind='scales')
-        chart = alt.Chart(dfc).mark_line(width=40).encode(
-            x='date',
-            y=f'{locations[location]}-{pollutant}',
-        ).properties(width=alt.Step(30)).add_selection(
-            scales
-        ).interactive()
+        chart = create_time_series(df, location, parameter, time_window, type)
         st.altair_chart(chart, use_container_width=True)
-
 
     with tabs[2]:
         st.header("About")
-        st.write("En esta sección se muestra información sobre el proyecto.")
 
+        # Developers
+        with st.container():
+            st.write('---')
+            st.header('Equipo')
+
+            with st.container():
+
+                col1, col2 = st.columns([1,1])
+                with col1:
+                    st.markdown(
+                        """
+                        #### Juan Pablo Echeagaray González
+                        - Email: pablowechg@gmail.com
+                        - LinkedIn: [Juan Echeagaray](https://www.linkedin.com/in/juan-echeagaray-b2a5661a3/)
+                        - GitHub: [JuanEcheagaray75](https://github.com/JuanEcheagaray75)
+                        """)
+
+                with col2:
+                    prof_pic = Image.open('assets/dev_pics/jpeg-pic.jpg')
+                    st.image(prof_pic, width=200)
+
+            with st.container():
+                st.markdown(
+                    """
+                    #### Verónica Victoria García De la Fuente
+                    """)
+
+            with st.container():
+                st.markdown(
+                    """
+                    #### Ricardo de Jesús Balam Ek
+                    """)
+
+            with st.container():
+                st.markdown(
+                    """
+                    #### Emily Rebeca Méndez Cruz
+                    """)
+
+            with st.container():
+                st.markdown(
+                    """
+                    #### Eugenio Santisteban Zolezzi
+                    """)
 
 if __name__ == "__main__":
     main()
