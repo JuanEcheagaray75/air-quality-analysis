@@ -2,59 +2,78 @@
 
 ## Business background
 
-* Who is the client, what business domain the client is in.
-* What business problems are we trying to address?
+**SIMA** _(Sistema Integral de Monitoreo Ambiental)_ is a government agency focused on measuring air quality in the city of Monterrey, Nuevo León, México. The agency is responsible for measuring the concentration of pollutants in the air and publishing the results in a public website. The agency was born as a project of the _Subsecretaría de Ecología_ back at 1992, its original purpose was to initiate a continuous and reliable data collection system for measuring air quality in the city.
+
+As of now the agency has located 14 stations across the city, each station measures the concentration of 6 pollutants: _Ozone_, _Nitrogen Dioxide_, _Sulfur Dioxide_, _Carbon Monoxide_ and _Particulate Matter_ (2.5, 10); and 7 meteorological parameters: _Temperature_, _Relative Humidity_, _Wind Speed_, _Wind Direction_, _Precipitation_, _Solar Radiation_ and _Atmospheric Pressure_.
+
+SIMA has been heavily criticized for its unreliability and poor management. On May 18, 2022, the newspaper _Reporte Indigo_ released a note covering how the reported Air Quality Index (AQI) did not comply with World Health Organization (WHO) standards, as it used PM10 as the main indicator instead of PM2.5. In less than 2 weeks later, on May 30, 2022, the _Instituto Nacional de Ecología y Cambio Climático_ released a report describing SIMA's reports as unclear for the population, it criticized how the recorded data was not constantly updated, and what got to their main website was hard to understand for the general public. The report also mentioned how the agency was not transparent with the data, and how the data was not available for download.
+
+The current goal is to provide a tool that allows the general public to understand the data collected by SIMA, while also providing a framework for the agency to improve their data collection and management. Further statistical analysis will be performed to provide a better understanding of geographical and temporal trends in the data for the development of a predictive model for air quality. The tool will be developed in a way that allows the agency to easily update the data and add new features.
 
 ## Scope
 
-* What data science solutions are we trying to build?
-* What will we do?
-* How is it going to be consumed by the customer?
+- What data science solutions are we trying to build?
+- What will we do?
+- How is it going to be consumed by the customer?
+
+This project will develop a web application that will serve as a dashboard for the data collected by SIMA. In the backend, the application will be able to download the data from SIMA's website, clean it, and store it in a database. A statistical analysis will be performed to find the underlying relationships (correlations, interdependencies, etc...) within the collected data.
+
+The final dashboard will be made with the Streamlit library, and will be hosted either on a server provided by SIMA or on a cloud provider. The dashboard will be able to show the data collected by SIMA in a way that is easy to understand for the general public. The dashboard will also be able to show the results of the statistical analysis performed by our team so it can be studied by the analysts of SIMA.
 
 ## Personnel
 
-* Who are on this project:
-  * Microsoft:
-    * Project lead
-    * PM
-    * Data scientist(s)
-    * Account manager
-  * Client:
-    * Data administrator
-    * Business contact
+- Who are on this project:
+  - Tec de Monterrey
+    - Project Manager and Data Scientist: Juan Pablo Echeagaray González
+  - SIMA
+    - Data Analyst: Jair Rafael Carrillo Ávila
 
 ## Metrics
 
-* What are the qualitative objectives? (e.g. reduce user churn)
-* What is a quantifiable metric  (e.g. reduce the fraction of users with 4-week inactivity)
-* Quantify what improvement in the values of the metrics are useful for the customer scenario (e.g. reduce the  fraction of users with 4-week inactivity by 20%)
-* What is the baseline (current) value of the metric? (e.g. current fraction of users with 4-week inactivity = 60%)
-* How will we measure the metric? (e.g. A/B test on a specified subset for a specified period; or comparison of performance after implementation to baseline)
+The project's success and performance will be measured by both qualitative and quantitative metrics given the nature of the critics made by the government agencies. We can summarize the qualitative metrics as follows:
+
+- Dashboard that is clear and accesible for the general public, providing:
+  - General overview of the Air Quality in the city
+  - Granular view of the Air Quality in a specific area
+  - Up to date metrics about the pollutants and their effects on the human body
+  - Historical records for the Air Quality in the form of a time series, the end user can select the time period to be displayed
+  - General information on how the contaminants are measured and regulated by the government
+
+Our quantitative metrics are:
+
+- Application of dimensionality reduction techniques to optimize the data collection process (time, cost, space, etc...) based on the results of the statistical analysis performed on the data, there is no current baseline value for this metric, as no techniques have been implemented yet, a generous baseline value will be set at 10%.
+- Accurate predictive model for air quality; there is no current baseline value for this metric, as no techniques have been implemented yet, we establish our baseline accuracy at 90%. The model will be evaluated on a test set generated by a cross validation procedure appropriate for time dependent data since there is no access to real time data yet.
 
 ## Plan
 
-* Phases (milestones), timeline, short description of what we'll do in each phase.
+- Phases (milestones), timeline, short description of what we'll do in each phase.
 
 ## Architecture
 
-* Data
-  * What data do we expect? Raw data in the customer data sources (e.g. on-prem files, SQL, on-prem Hadoop etc.)
-* Data movement from on-prem to Azure using ADF or other data movement tools (Azcopy, EventHub etc.) to move either
-  * all the data,
-  * after some pre-aggregation on-prem,
-  * Sampled data enough for modeling
+- Data
+  - What data do we expect? Raw data in the customer data sources (e.g. on-prem files, SQL, on-prem Hadoop etc.)
+- Data movement from on-prem to Azure using ADF or other data movement tools (Azcopy, EventHub etc.) to move either
+  - all the data,
+  - after some pre-aggregation on-prem,
+  - Sampled data enough for modeling
 
-* What tools and data storage/analytics resources will be used in the solution e.g.,
-  * ASA for stream aggregation
-  * HDI/Hive/R/Python for feature construction, aggregation and sampling
-  * AzureML for modeling and web service operationalization
-* How will the score or operationalized web service(s) (RRS and/or BES) be consumed in the business workflow of the customer? If applicable, write down pseudo code for the APIs of the web service calls.
-  * How will the customer use the model results to make decisions
-  * Data movement pipeline in production
-  * Make a 1 slide diagram showing the end to end data flow and decision architecture
-    * If there is a substantial change in the customer's business workflow, make a before/after diagram showing the data flow.
+- What tools and data storage/analytics resources will be used in the solution e.g.,
+  - ASA for stream aggregation
+  - HDI/Hive/R/Python for feature construction, aggregation and sampling
+  - AzureML for modeling and web service operationalization
+- How will the score or operationalized web service(s) (RRS and/or BES) be consumed in the business workflow of the customer? If applicable, write down pseudo code for the APIs of the web service calls.
+  - How will the customer use the model results to make decisions
+  - Data movement pipeline in production
+  - Make a 1 slide diagram showing the end to end data flow and decision architecture
+    - If there is a substantial change in the customer's business workflow, make a before/after diagram showing the data flow.
 
 ## Communication
 
-* How will we keep in touch? Weekly meetings?
-* Who are the contact persons on both sides?
+- How will we keep in touch? Weekly meetings?
+- Who are the contact persons on both sides?
+
+## References
+
+- http://www2.inecc.gob.mx/publicaciones2/libros/234/cap3.html
+- https://www.reporteindigo.com/reporte/sima-en-nuevo-leon-evade-medicion-de-calidad-del-aire/
+- https://www.reporteindigo.com/reporte/sima-en-zona-metropolitana-de-monterrey-no-es-confiable/
