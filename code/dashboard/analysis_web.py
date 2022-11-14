@@ -1,17 +1,23 @@
+
+import sys
+sys.path.append('..')
+
 import streamlit as st
 import pandas as pd
 import altair as alt
-from utils import clean_data, metric_calculator, melt_data, create_time_series
-from utils import locations, cont_params, cont_units, meteo_params, meteo_units
+from prep.cleaning import clean_data, melt_data
+from utils import metric_calculator, create_time_series
+from prep.cleaning import locations, cont_params, cont_units, meteo_params, meteo_units
 import requests
 from streamlit_lottie import st_lottie
 from PIL import Image
 
 
+
 # DATA ASSETS
 # ------------------------------------------------------------------
-df_cont = pd.read_csv('data/SD_TecMTY_contaminantes_2021_2022.csv')
-df_meteo = pd.read_csv('data/SD_TecMTY_meteorologia_2021_2022.csv')
+df_cont = pd.read_csv('../../data/raw/SD_TecMTY_contaminantes_2021_2022.csv')
+df_meteo = pd.read_csv('../../data/raw/SD_TecMTY_meteorologia_2021_2022.csv')
 
 df_cont.drop(columns=['Unnamed: 0'], inplace=True)
 df_meteo.drop(columns=['Unnamed: 0'], inplace=True)
@@ -88,32 +94,40 @@ def main():
 
     # Análisis temporal
     with tabs[1]:
-        st.header("Series de tiempo")
-        st.write("Selecciona la estación y el parámetro que deseas visualizar")
-        # db_conv = {'Contaminantes': 'cont', 'Meteorología': 'meteo'}
-        param_conv = {'Contaminantes': cont_params, 'Meteorológicos': meteo_params}
 
-        cols = st.columns(2)
-        with cols[0]:
-            db_type = st.radio("Select the type of data", ('Contaminantes', 'Meteorológicos'))
-            time_window = st.selectbox("Time window", ('D', 'W', 'M', 'Y'))
-            # Map db_type to either 'cont' or 'meteo'
+        with st.container():
+            st.header("Series de tiempo")
+            st.write("Selecciona la estación y el parámetro que deseas visualizar")
+            # db_conv = {'Contaminantes': 'cont', 'Meteorología': 'meteo'}
+            param_conv = {'Contaminantes': cont_params, 'Meteorológicos': meteo_params}
 
-        with cols[1]:
-            location = st.selectbox("Location", list(locations.keys()))
-            params = param_conv[db_type]
-            parameter = st.selectbox("Parameter", params)
+            cols = st.columns(2)
+            with cols[0]:
+                db_type = st.radio("Select the type of data", ('Contaminantes', 'Meteorológicos'))
+                time_window = st.selectbox("Time window", ('D', 'W', 'M', 'Y'))
+                # Map db_type to either 'cont' or 'meteo'
 
-        if db_type == 'Contaminantes':
-            df = clean_data(big_cont, location)
-            type = 'cont'
-        elif db_type == 'Meteorológicos':
-            df = clean_data(big_meteo, location)
-            type = 'meteo'
+            with cols[1]:
+                location = st.selectbox("Location", list(locations.keys()))
+                params = param_conv[db_type]
+                parameter = st.selectbox("Parameter", params)
 
-        st.write("Time series of pollutant concentration")
-        chart = create_time_series(df, location, parameter, time_window, type)
-        st.altair_chart(chart, use_container_width=True)
+            if db_type == 'Contaminantes':
+                df = clean_data(big_cont, location)
+                type = 'cont'
+            elif db_type == 'Meteorológicos':
+                df = clean_data(big_meteo, location)
+                type = 'meteo'
+
+            st.write("Time series of pollutant concentration")
+            chart = create_time_series(df, location, parameter, time_window, type)
+            st.altair_chart(chart, use_container_width=True)
+            st.write('---')
+
+
+
+        with st.container():
+            st.write('---')
 
     with tabs[2]:
         st.header("About")
@@ -136,7 +150,7 @@ def main():
                         """)
 
                 with col2:
-                    prof_pic = Image.open('assets/dev_pics/jpeg-pic.jpg')
+                    prof_pic = Image.open('../../assets/dev_pics/jpeg-pic.jpg')
                     st.image(prof_pic, width=200)
 
             with st.container():
