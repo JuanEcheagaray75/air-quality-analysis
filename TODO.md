@@ -22,6 +22,7 @@
 - [ ] Planteamiento del problema
 - [ ] Justificación
 - [ ] Marco Teórico
+- [ ] TEMP Introducción al cliente / mercado
 - [ ] Objetivos (General y Específicos)
 - [ ] Hipótesis (Describir la racionalidad del proyecto)
 - [ ] Metodología
@@ -31,14 +32,14 @@
   - [ ] Modelado
   - [ ] Despliegue y evaluación
 - [ ] Técnicas y herramientas de ingeniería empleadas
+  - [ ] Técnicas generales de multi-variados
   - [ ] Mencionar librerías
   - [ ] Inspiración del proceso de análisis en TDSP
+  - [ ] Mencionar brevemente las librerías utilizadas
 - [ ] Infraestructura
 - [ ] Objetivos de Desarrollo Sostenible
 - [ ] Recursos utilizados
   - [ ] Ficha técnica del equipo de cómputo usado para el análisis
-  - [ ] Inspiración de la metodología implementada en el proyecto (TDSP)
-  - [ ] Mencionar brevemente las librerías utilizadas
 - [ ] Resultados
 - [ ] Conclusiones
 - [ ] Bibliografía
