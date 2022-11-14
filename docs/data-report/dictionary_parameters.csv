@@ -1,0 +1,14 @@
+Parameter,Type,Units,Description
+PM10,Contaminant,µg/m3,Suspended coarse particulate matter with a diameter of 10 micrometers or less
+PM2.5,Contaminant,µg/m3,Suspended coarse particulate matter with a diameter of 2.5 micrometers or less
+O3,Contaminant,ppb,Ozone
+SO2,Contaminant,ppb,Sulfur Dioxide
+NO2,Contaminant,ppb,Nitrogen Dioxide
+CO,Contaminant,ppm,Carbon Monoxide
+TOUT,Meteorological,ºC,Temperature
+RH,Meteorological,%,Relative Humidity
+SR,Meteorological,kW/m2,Solar Radiation
+RAINF,Meteorological,mm/Hr,Rain
+PRS,Meteorological,mm Hg,Atmospheric Pressure
+WSR,Meteorological,Km/hr,Wind Speed
+WDR,Meteorological,º,Wind Direction

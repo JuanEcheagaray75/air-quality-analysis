@@ -1,0 +1,20 @@
+Flag,Description,Measurement Validity
+P,Electrical faillure,Valid
+p,Electrical faillure,Invalid
+C,Ongoing calibration procedure,Valid
+c,Ongoing calibration procedure,Invalid
+D,Machine off,Valid
+d,Machine off,Invalid
+B,Poor conditions,Valid
+b,Poor conditions,Invalid
+m,Positive over the range,Invalid
+l,Negative over the range,Invalid
+z,Invalidating zeros and negative numbers,Invalid
+o,PM10 greather than 900 ug/m3,Invalid
+s,Duplicated values,Invalid
+r,Comparison between PM10 and PM2.5,Invalid
+e,Delete measurements for  NO and NOx,Invalid
+a,Delete when PM less than 5 ug/m3 and CO less than 0.05 ppm,Invalid
+s,Consecutive repeated values,Invalid
+f,Values 3 times greater than the previous record for PM10,Invalid
+h,Delete when there is a 10° increase in temperature or 10 mm Hg increase in atmospheric pressure,Invalid

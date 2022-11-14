@@ -1,0 +1,31 @@
+Column Index,Column Name,Type of Variable,Values,Short description
+0,date,Ordinal,"2021-07-01 0:00:00, 2022-09-30 23:00:00","Date of the recorded measure, reports average per hour"
+1,parameter,Nominal,"TOUT, RH, SR, RAINF, PRS, WSR, WDR",Parameter being measured at the given stations
+2,SE,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at La Pastora station
+3,SE_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+4,NE,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at San Nicolás station
+5,NE_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+6,CE,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at Obispado station
+7,CE_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+8,NO,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at San Bernabé station
+9,NO_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+10,SO,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at Santa Catarina station
+11,SO_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+12,NO2,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at García station
+13,NO2_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+14,Norte,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at Escobedo station
+15,NTE_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+16,NE2,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at Apodaca station
+17,NE2_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+18,SE2,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at Juárez station
+19,SE2_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+20,SO2,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at San Pedro Garza García station
+21,SO2_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+22,SE3,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at x station
+23,SE3_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+24,SUR,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at x station
+25,SUR_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+26,Norte2,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at x station
+27,NTE2_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
+28,NE3,Continuous,Positive real numbers,Numerical data of the meteorological parameters measured at x station
+29,NE3_b,Nominal,"k, l, n, s, x",Flag signaling the failure occured during the measurement
