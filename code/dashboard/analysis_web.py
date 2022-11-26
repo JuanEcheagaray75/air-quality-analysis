@@ -19,9 +19,7 @@ from PIL import Image
 df_cont = pd.read_csv('../../data/raw/SD_TecMTY_contaminantes_2021_2022.csv')
 df_meteo = pd.read_csv('../../data/raw/SD_TecMTY_meteorologia_2021_2022.csv')
 
-df_cont.drop(columns=['Unnamed: 0'], inplace=True)
-df_meteo.drop(columns=['Unnamed: 0'], inplace=True)
-
+# ------------------------------------------------------------------
 big_cont = melt_data(df_cont)
 big_meteo = melt_data(df_meteo)
 # ------------------------------------------------------------------
@@ -36,6 +34,8 @@ def load_lottieurl(url):
         return None
 
     return r.json()
+
+
 home_anim = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_EyJRUV.json")
 
 
@@ -152,30 +152,6 @@ def main():
                 with col2:
                     prof_pic = Image.open('../../assets/dev_pics/jpeg-pic.jpg')
                     st.image(prof_pic, width=200)
-
-            with st.container():
-                st.markdown(
-                    """
-                    #### Verónica Victoria García De la Fuente
-                    """)
-
-            with st.container():
-                st.markdown(
-                    """
-                    #### Ricardo de Jesús Balam Ek
-                    """)
-
-            with st.container():
-                st.markdown(
-                    """
-                    #### Emily Rebeca Méndez Cruz
-                    """)
-
-            with st.container():
-                st.markdown(
-                    """
-                    #### Eugenio Santisteban Zolezzi
-                    """)
 
 if __name__ == "__main__":
     main()

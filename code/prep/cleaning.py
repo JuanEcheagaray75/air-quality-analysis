@@ -36,6 +36,7 @@ def melt_data(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: Melted dataset
     """
+    df = df.copy()
     df.drop(columns=['Unnamed: 0'], inplace=True)
     columns = df.columns
     columns = columns.drop(['date', 'parameter'])
@@ -86,6 +87,7 @@ def clean_data(df: pd.DataFrame, station: str) -> pd.DataFrame:
         print(f'Location {station} not found')
         raise KeyError(f'Location {station} not found')
 
+    df = df.copy()
     df = df.query(f'station == "{location}" or station == "{location}_b"')
     df = pd.pivot(df, index='date', columns=[
                   'station', 'parameter'], values='value')
@@ -171,7 +173,8 @@ def main():
 
     save_data(big_cont, 'contaminants')
     save_data(big_meteo, 'meteorology')
-    # Testing the pre-commit hook Testing the pre-commit hook Testing the pre-commit hook Testing the pre-commit hook Testing the pre-commit hookTesting the pre-commit hook
 
+    general_dataset = merge_df(big_meteo, big_cont)
+    save_data(general_dataset, 'general_dataset')
 
-main()
+# main()

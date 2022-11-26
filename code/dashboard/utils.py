@@ -77,7 +77,7 @@ def metric_calculator(df: pd.DataFrame, day_range: int, type: str) -> pd.DataFra
     return means
 
 
-def create_time_series(df: pd.DataFrame, station: str, param: str, time_range: str, type: str):
+def create_time_series(df: pd.DataFrame, station: str, param: str, time_range: str, type: str) -> alt.Chart:
     df = df.copy()
     num_cols = df.select_dtypes(include='number').columns
     # add the date column
@@ -121,6 +121,28 @@ def create_time_series(df: pd.DataFrame, station: str, param: str, time_range: s
         nearest
     )
     chart = alt.layer(line, selectors, rules, points).properties(
+        title=f'{locations[station]}-{param}',
+        height=300,
+        width=900
+    ).interactive()
+
+    return chart
+
+def create_box_plot(df: pd.DataFrame, station: str, param: str, time_range: str, type: str):
+
+    df = df.copy()
+    num_cols = df.select_dtypes(include='number').columns
+    num_cols = num_cols.insert(0, 'date')
+    data = df[num_cols] [['date', f'{locations[station]}-{param}']]
+    data = data.groupby(pd.Grouper(key='date', freq='D')).mean().reset_index()
+    # Create a new column with the month of the observation
+    data['month'] = data.date.dt.month
+
+    chart = alt.Chart(data).mark_boxplot(size=60).encode(
+        x='month:O',
+        y=alt.Y(f'{locations[station]}-{param}', title=f'{param}'),
+        color=alt.Color('month:O', legend=None)
+    ).properties(
         title=f'{locations[station]}-{param}',
         height=300,
         width=900
